@@ -11,6 +11,11 @@ interface User {
   username: string;
   fullName?: string;
   email?: string;
+  bio?: string;
+  mobileNumber?: string;
+  gender?: string;
+  profileImageUrl?: string;
+  interests?: string[];
   isAuthenticated: boolean;
 }
 
