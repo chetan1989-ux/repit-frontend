@@ -6,7 +6,9 @@ const SignupPage: React.FC = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: '',
+    username: '',
     email: '',
+    dob: '',
     password: '',
     confirmPassword: '',
     agreeTerms: false,
@@ -26,8 +28,11 @@ const SignupPage: React.FC = () => {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
     if (!formData.fullName) newErrors.fullName = 'Full name is required';
+    if (!formData.username) newErrors.username = 'Username is required';
+    else if (formData.username.length < 3) newErrors.username = 'Username must be at least 3 characters';
     if (!formData.email) newErrors.email = 'Email is required';
     else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
+    if (!formData.dob) newErrors.dob = 'Date of birth is required';
     
     if (!formData.password) newErrors.password = 'Password is required';
     else if (formData.password.length < 8) newErrors.password = 'Password must be at least 8 characters';
@@ -51,7 +56,9 @@ const SignupPage: React.FC = () => {
         // Store signup data in local storage for email verification
         localStorage.setItem('signupData', JSON.stringify({
           fullName: formData.fullName,
+          username: formData.username,
           email: formData.email,
+          dob: formData.dob,
           // In a real app, never store passwords in localStorage
         }));
         navigate('/verify-email');
@@ -119,6 +126,28 @@ const SignupPage: React.FC = () => {
             </div>
 
             <div>
+              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                Username
+              </label>
+              <div className="mt-1">
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  autoComplete="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  className={`block w-full appearance-none rounded-md border px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm ${
+                    errors.username ? 'border-red-300' : 'border-gray-300'
+                  }`}
+                />
+                {errors.username && (
+                  <p className="mt-1 text-sm text-red-600">{errors.username}</p>
+                )}
+              </div>
+            </div>
+
+            <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email address
               </label>
@@ -136,6 +165,27 @@ const SignupPage: React.FC = () => {
                 />
                 {errors.email && (
                   <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="dob" className="block text-sm font-medium text-gray-700">
+                Date of Birth
+              </label>
+              <div className="mt-1">
+                <input
+                  id="dob"
+                  name="dob"
+                  type="date"
+                  value={formData.dob}
+                  onChange={handleChange}
+                  className={`block w-full appearance-none rounded-md border px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm ${
+                    errors.dob ? 'border-red-300' : 'border-gray-300'
+                  }`}
+                />
+                {errors.dob && (
+                  <p className="mt-1 text-sm text-red-600">{errors.dob}</p>
                 )}
               </div>
             </div>
