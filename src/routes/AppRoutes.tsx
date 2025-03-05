@@ -4,6 +4,10 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import DashboardLayout from '../layouts/DashboardLayout';
 import HomePage from '../pages/HomePage';
 import CreateContentPage from '../pages/CreateContentPage';
+import SignupPage from '../pages/SignupPage';
+import VerifyEmailPage from '../pages/VerifyEmailPage';
+import OnboardingPage from '../pages/OnboardingPage';
+import LoginPage from '../pages/LoginPage';
 import { useUser } from '../contexts/UserContext';
 
 const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => {
@@ -19,8 +23,11 @@ const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => 
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path="/login" element={<div>Login Page (to be implemented)</div>} />
-      <Route path="/register" element={<div>Register Page (to be implemented)</div>} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<SignupPage />} />
+      <Route path="/signup" element={<SignupPage />} />
+      <Route path="/verify-email" element={<VerifyEmailPage />} />
+      <Route path="/onboarding" element={<OnboardingPage />} />
       
       <Route path="/" element={<DashboardLayout />}>
         <Route index element={<HomePage />} />

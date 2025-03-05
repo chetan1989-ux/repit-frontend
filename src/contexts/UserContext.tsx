@@ -1,39 +1,77 @@
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-
-// Define user interface
-export interface User {
+interface User {
   id: string;
-  name: string;
-  email: string;
-  isAdmin: boolean;
+  username: string;
+  fullName?: string;
+  email?: string;
+  isAuthenticated: boolean;
 }
 
 interface UserContextType {
   user: User | null;
-  setUser: (user: User | null) => void;
   isAuthenticated: boolean;
+  login: (userData: User) => void;
   logout: () => void;
 }
+
+// For development purposes
+const defaultUser: User = {
+  id: '1',
+  username: 'demo_user',
+  fullName: 'Demo User',
+  isAuthenticated: true,
+};
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  const logout = () => {
-    setUser(null);
+  // Check for existing user data on initialization
+  useEffect(() => {
+    const storedUserData = localStorage.getItem('userData');
+
+    if (storedUserData) {
+      try {
+        const userData = JSON.parse(storedUserData);
+        // Create a user object from the stored data
+        setUser({
+          id: userData.id || Math.random().toString(36).substr(2, 9),
+          username: userData.username,
+          fullName: userData.fullName,
+          email: userData.email,
+          isAuthenticated: true
+        });
+      } catch (error) {
+        console.error('Failed to parse user data:', error);
+        setUser(defaultUser); // Fallback to demo user
+      }
+    } else {
+      setUser(defaultUser); // Set demo user for development
+    }
+  }, []);
+
+  const login = (userData: User) => {
+    setUser(userData);
+    // In a real app, you might store authentication tokens
   };
 
-  const isAuthenticated = !!user;
+  const logout = () => {
+    setUser(null);
+    // Clear user-related data
+    localStorage.removeItem('userData');
+    localStorage.removeItem('signupData');
+    localStorage.removeItem('emailVerified');
+  };
 
   return (
     <UserContext.Provider
       value={{
         user,
-        setUser,
-        isAuthenticated,
-        logout
+        isAuthenticated: !!user?.isAuthenticated,
+        login,
+        logout,
       }}
     >
       {children}
