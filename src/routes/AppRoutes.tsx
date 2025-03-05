@@ -8,6 +8,7 @@ import SignupPage from '../pages/SignupPage';
 import VerifyEmailPage from '../pages/VerifyEmailPage';
 import OnboardingPage from '../pages/OnboardingPage';
 import LoginPage from '../pages/LoginPage';
+import ErrorPage from '../pages/ErrorPage';
 import { useUser } from '../contexts/UserContext';
 
 const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => {
@@ -28,6 +29,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/verify-email" element={<VerifyEmailPage />} />
       <Route path="/onboarding" element={<OnboardingPage />} />
+      <Route path="/error" element={<ErrorPage />} />
       
       <Route path="/" element={<DashboardLayout />}>
         <Route index element={<HomePage />} />
@@ -39,7 +41,7 @@ const AppRoutes: React.FC = () => {
         {/* More routes will be added as we implement more pages */}
       </Route>
       
-      <Route path="*" element={<div>404 Not Found</div>} />
+      <Route path="*" element={<ErrorPage />} />
     </Routes>
   );
 };
