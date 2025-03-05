@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
@@ -22,37 +21,28 @@ const LoginPage: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // For demo, we'll check if there's user data in localStorage
-    const userData = localStorage.getItem('userData');
-    
-    // In a real app, this would call an API to authenticate
-    setTimeout(() => {
-      if (userData && formData.username === JSON.parse(userData).username) {
-        // Login successful
-        login({
-          id: JSON.parse(userData).id || Math.random().toString(36).substr(2, 9),
-          username: formData.username,
-          fullName: JSON.parse(userData).fullName,
-          email: JSON.parse(userData).email,
-          isAuthenticated: true
-        });
-        navigate('/');
-      } else if (formData.username === 'demo' && formData.password === 'password') {
-        // Demo login
-        login({
+
+    // Mocked authentication logic
+    if (formData.username && formData.password) {
+      // In a real app, this would make an API call
+      setTimeout(() => {
+        const userData = {
           id: Math.random().toString(36).substr(2, 9),
-          username: 'demo',
-          fullName: 'Demo User',
-          email: 'demo@example.com',
+          username: formData.username,
+          fullName: formData.username, // Using username as fallback for display
           isAuthenticated: true
-        });
+        };
+
+        // Save the user data to localStorage
+        localStorage.setItem('userData', JSON.stringify(userData));
+
+        login(userData);
         navigate('/');
-      } else {
-        setError('Invalid username or password');
-      }
+      }, 1000);
+    } else {
+      setError('Please enter both username and password');
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -69,7 +59,7 @@ const LoginPage: React.FC = () => {
             </Link>
           </p>
         </div>
-        
+
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
@@ -90,7 +80,7 @@ const LoginPage: React.FC = () => {
                 />
               </div>
             </div>
-            
+
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
@@ -110,11 +100,11 @@ const LoginPage: React.FC = () => {
               </div>
             </div>
           </div>
-          
+
           {error && (
             <div className="text-red-600 text-sm">{error}</div>
           )}
-          
+
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <input
@@ -127,14 +117,14 @@ const LoginPage: React.FC = () => {
                 Remember me
               </label>
             </div>
-            
+
             <div className="text-sm">
               <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
                 Forgot your password?
               </a>
             </div>
           </div>
-          
+
           <div>
             <button
               type="submit"
@@ -144,7 +134,7 @@ const LoginPage: React.FC = () => {
               {isSubmitting ? 'Signing in...' : 'Sign in'}
             </button>
           </div>
-          
+
           <div className="text-center text-xs text-gray-500">
             <p>Demo account: username = "demo", password = "password"</p>
           </div>

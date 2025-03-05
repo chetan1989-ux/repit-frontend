@@ -21,7 +21,7 @@ interface UserContextType {
   logout: () => void;
 }
 
-// For development purposes
+// For development purposes - set to true if you want to skip login for testing
 const defaultUser: User = {
   id: "1",
   username: "demo_user",
