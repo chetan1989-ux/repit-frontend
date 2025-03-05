@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -13,7 +12,7 @@ const SignupPage: React.FC = () => {
     confirmPassword: '',
     agreeTerms: false,
   });
-  
+
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -33,10 +32,10 @@ const SignupPage: React.FC = () => {
     if (!formData.email) newErrors.email = 'Email is required';
     else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
     if (!formData.dob) newErrors.dob = 'Date of birth is required';
-    
+
     if (!formData.password) newErrors.password = 'Password is required';
     else if (formData.password.length < 8) newErrors.password = 'Password must be at least 8 characters';
-    
+
     if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
     if (!formData.agreeTerms) newErrors.agreeTerms = 'You must agree to the terms and conditions';
 
@@ -101,7 +100,7 @@ const SignupPage: React.FC = () => {
               </div>
             </div>
           )}
-          
+
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
@@ -159,6 +158,7 @@ const SignupPage: React.FC = () => {
                   autoComplete="email"
                   value={formData.email}
                   onChange={handleChange}
+                  placeholder="Email or username"
                   className={`block w-full appearance-none rounded-md border px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm ${
                     errors.email ? 'border-red-300' : 'border-gray-300'
                   }`}
