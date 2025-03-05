@@ -1,0 +1,68 @@
+Create a signup page that collects essential user information and initiates an email verification process before allowing users to complete their profile in an onboarding flow. The form should collect four required fields and enforce specific validation rules. After submission, the user must verify their email using an OTP (One-Time Password), with a resend option available after a 30-second cooldown. Upon successful verification, redirect the user to the onboarding page to finish their profile.
+
+Signup Page Fields
+Full Name*
+
+Purpose: Acts as the user's display name or nickname.
+Allowed Input: Alphabets and special characters.
+Validation:
+Maximum length: 50 characters.
+Field must be filled.
+Email Address*
+
+Purpose: Serves as the primary contact and login identifier.
+Allowed Input:
+Alphanumeric characters.
+Special characters allowed: _, -, ., @
+Validation:
+Maximum length: 100 characters.
+Must be unique across the platform.
+Field must be filled.
+Date of Birth*
+
+Purpose: To record the user's birth date and determine content accessibility based on age.
+Functionality:
+User must select their date of birth.
+Age-based Logic:
+Below 18: Display a message or provide information about restricted content (content accessible even after login will be limited).
+18 and above: Grant access to all content (both age-specific and general).
+Username*
+
+Purpose: Used as a unique identifier for login purposes.
+Allowed Input:
+Letters (a-z), numbers (0-9), underscores (_), and periods (.).
+Special symbols like @, #, or spaces should be disallowed.
+Validation:
+Minimum length: 5 characters.
+No maximum length constraint.
+Must be unique across user accounts.
+Auto-generation:
+The system will initially generate a username (e.g., a combination of email, date of birth, and full name).
+The user can update the auto-generated username if desired.
+Post-Submission Flow
+Email Verification Page:
+OTP Process:
+Upon form submission, redirect the user to a page where an OTP is sent to the entered email address.
+Display an input field for the user to enter the OTP.
+Resend OTP:
+Include a "Resend OTP" button.
+This button should remain disabled until 30 seconds have passed after the OTP is sent.
+Onboarding Page:
+After Successful Email Verification:
+Redirect the user to an onboarding page where they can complete additional profile details.
+Ensure the user’s account is now fully activated and authenticated.
+Additional Considerations
+Validation Feedback:
+Provide real-time feedback for each field (e.g., inline error messages for invalid inputs or if a duplicate email/username is detected).
+
+Security:
+
+Implement proper sanitization and validation both on the client and server sides.
+Securely handle OTP generation, storage, and expiration.
+User Experience:
+
+Ensure that the signup, email verification, and onboarding pages have a consistent design.
+Consider edge cases, such as users attempting to bypass steps or re-submitting the form.
+Internationalization:
+
+While the default country code for phone numbers (if applicable in extended flows) might be +1, ensure that the system can accommodate users from different regions if needed.
