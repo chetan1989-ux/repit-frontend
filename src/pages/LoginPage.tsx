@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
@@ -7,7 +6,7 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { login } = useUser();
   const [formData, setFormData] = useState({
-    email: '',
+    emailOrUsername: '',
     password: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -20,7 +19,7 @@ const LoginPage: React.FC = () => {
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    if (!formData.email) newErrors.email = 'Email is required';
+    if (!formData.emailOrUsername) newErrors.emailOrUsername = 'Email or Username is required';
     if (!formData.password) newErrors.password = 'Password is required';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -38,15 +37,15 @@ const LoginPage: React.FC = () => {
         // Mock successful login
         login({
           id: '1',
-          username: formData.email.split('@')[0],
-          email: formData.email,
+          username: formData.emailOrUsername, // Using emailOrUsername for both username and email
+          email: formData.emailOrUsername,   // Using emailOrUsername for both username and email
           isAuthenticated: true,
         });
         navigate('/');
       }, 1000);
     } catch (error) {
       console.error('Login error:', error);
-      setErrors({ form: 'Invalid email or password. Please try again.' });
+      setErrors({ form: 'Invalid email or username or password. Please try again.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -59,7 +58,7 @@ const LoginPage: React.FC = () => {
           <h2 className="text-3xl font-bold text-white">Welcome Back</h2>
           <p className="mt-2 text-indigo-200">Sign in to your account</p>
         </div>
-        
+
         <div className="px-6 py-8">
           {errors.form && (
             <div className="mb-4 rounded-md bg-red-50 p-4">
@@ -75,27 +74,27 @@ const LoginPage: React.FC = () => {
               </div>
             </div>
           )}
-          
+
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
+              <label htmlFor="emailOrUsername" className="block text-sm font-medium text-gray-700">
+                Email or Username
               </label>
               <div className="mt-1">
                 <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={formData.email}
+                  id="emailOrUsername"
+                  name="emailOrUsername"
+                  type="text"
+                  autoComplete="username email"
+                  value={formData.emailOrUsername}
                   onChange={handleChange}
                   className={`block w-full appearance-none rounded-md border px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm ${
-                    errors.email ? 'border-red-300' : 'border-gray-300'
+                    errors.emailOrUsername ? 'border-red-300' : 'border-gray-300'
                   }`}
+                  placeholder="Enter your email or username"
                 />
-                {errors.email && (
-                  <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                {errors.emailOrUsername && (
+                  <p className="mt-1 text-sm text-red-600">{errors.emailOrUsername}</p>
                 )}
               </div>
             </div>
@@ -195,7 +194,7 @@ const LoginPage: React.FC = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="border-t border-gray-200 bg-gray-50 px-6 py-4">
           <p className="text-center text-sm text-gray-600">
             Don't have an account?{' '}
