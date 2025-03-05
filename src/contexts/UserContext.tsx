@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 
 interface User {
   id: string;
@@ -17,20 +23,22 @@ interface UserContextType {
 
 // For development purposes
 const defaultUser: User = {
-  id: '1',
-  username: 'demo_user',
-  fullName: 'Demo User',
-  isAuthenticated: true,
+  id: "1",
+  username: "demo_user",
+  fullName: "Demo User",
+  isAuthenticated: false,
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const UserProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
 
   // Check for existing user data on initialization
   useEffect(() => {
-    const storedUserData = localStorage.getItem('userData');
+    const storedUserData = localStorage.getItem("userData");
 
     if (storedUserData) {
       try {
@@ -41,10 +49,10 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           username: userData.username,
           fullName: userData.fullName,
           email: userData.email,
-          isAuthenticated: true
+          isAuthenticated: true,
         });
       } catch (error) {
-        console.error('Failed to parse user data:', error);
+        console.error("Failed to parse user data:", error);
         setUser(defaultUser); // Fallback to demo user
       }
     } else {
@@ -60,9 +68,9 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const logout = () => {
     setUser(null);
     // Clear user-related data
-    localStorage.removeItem('userData');
-    localStorage.removeItem('signupData');
-    localStorage.removeItem('emailVerified');
+    localStorage.removeItem("userData");
+    localStorage.removeItem("signupData");
+    localStorage.removeItem("emailVerified");
   };
 
   return (
@@ -82,7 +90,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 export const useUser = (): UserContextType => {
   const context = useContext(UserContext);
   if (context === undefined) {
-    throw new Error('useUser must be used within a UserProvider');
+    throw new Error("useUser must be used within a UserProvider");
   }
   return context;
 };
