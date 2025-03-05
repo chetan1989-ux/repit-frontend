@@ -7,12 +7,12 @@ import './index.css';
 
 export default function App() {
   return (
-    <UserProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <UserProvider>
         <div className="min-h-screen bg-gray-50">
           <AppRoutes />
         </div>
-      </BrowserRouter>
-    </UserProvider>
+      </UserProvider>
+    </BrowserRouter>
   );
 }
