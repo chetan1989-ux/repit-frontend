@@ -72,7 +72,8 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
 
   const login = (userData: User) => {
     setUser(userData);
-    // In a real app, you might store authentication tokens
+    // Store user data in localStorage for persistence
+    localStorage.setItem('userData', JSON.stringify(userData));
   };
 
   const logout = () => {
