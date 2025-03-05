@@ -4,39 +4,54 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 
 const LoginPage: React.FC = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  
   const navigate = useNavigate();
   const { login } = useUser();
+  const [formData, setFormData] = useState({
+    username: '',
+    password: ''
+  });
+  const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (error) setError('');
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     
-    if (!username || !password) {
-      setError('Please enter both username and password');
-      return;
-    }
+    // For demo, we'll check if there's user data in localStorage
+    const userData = localStorage.getItem('userData');
     
-    setIsLoading(true);
-    setError('');
-    
-    // Mock authentication - in a real app, this would be an API call
+    // In a real app, this would call an API to authenticate
     setTimeout(() => {
-      // For demo purposes, accept any login with "password" as the password
-      if (password === 'password') {
+      if (userData && formData.username === JSON.parse(userData).username) {
+        // Login successful
+        login({
+          id: JSON.parse(userData).id || Math.random().toString(36).substr(2, 9),
+          username: formData.username,
+          fullName: JSON.parse(userData).fullName,
+          email: JSON.parse(userData).email,
+          isAuthenticated: true
+        });
+        navigate('/');
+      } else if (formData.username === 'demo' && formData.password === 'password') {
+        // Demo login
         login({
           id: Math.random().toString(36).substr(2, 9),
-          username,
+          username: 'demo',
+          fullName: 'Demo User',
+          email: 'demo@example.com',
           isAuthenticated: true
         });
         navigate('/');
       } else {
-        setError('Invalid credentials. Please try again.');
+        setError('Invalid username or password');
       }
-      setIsLoading(false);
+      setIsSubmitting(false);
     }, 1000);
   };
 
@@ -48,20 +63,14 @@ const LoginPage: React.FC = () => {
             Sign in to your account
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Or{' '}
+            Don't have an account?{' '}
             <Link to="/signup" className="font-medium text-indigo-600 hover:text-indigo-500">
-              create a new account
+              Sign up
             </Link>
           </p>
         </div>
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {error && (
-            <div className="p-3 bg-red-50 text-red-700 border border-red-200 rounded-md text-sm">
-              {error}
-            </div>
-          )}
-          
           <div className="space-y-4">
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-gray-700">
@@ -74,9 +83,10 @@ const LoginPage: React.FC = () => {
                   type="text"
                   autoComplete="username"
                   required
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={formData.username}
+                  onChange={handleChange}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="username"
                 />
               </div>
             </div>
@@ -92,28 +102,51 @@ const LoginPage: React.FC = () => {
                   type="password"
                   autoComplete="current-password"
                   required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={formData.password}
+                  onChange={handleChange}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="••••••••"
                 />
               </div>
+            </div>
+          </div>
+          
+          {error && (
+            <div className="text-red-600 text-sm">{error}</div>
+          )}
+          
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <input
+                id="remember-me"
+                name="remember-me"
+                type="checkbox"
+                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+              />
+              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                Remember me
+              </label>
+            </div>
+            
+            <div className="text-sm">
+              <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+                Forgot your password?
+              </a>
             </div>
           </div>
           
           <div>
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isSubmitting}
               className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-400"
             >
-              {isLoading ? 'Signing in...' : 'Sign in'}
+              {isSubmitting ? 'Signing in...' : 'Sign in'}
             </button>
           </div>
           
-          <div className="text-center">
-            <p className="text-sm text-gray-500">
-              For demo purposes, use any username with password "password"
-            </p>
+          <div className="text-center text-xs text-gray-500">
+            <p>Demo account: username = "demo", password = "password"</p>
           </div>
         </form>
       </div>

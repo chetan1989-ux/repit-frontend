@@ -109,42 +109,23 @@ const OnboardingPage: React.FC = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-50 items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-2xl space-y-8 bg-white p-8 rounded-lg shadow-md">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+      <div className="w-full max-w-lg bg-white p-8 rounded-lg shadow-md">
+        <div className="mb-8">
+          <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900">
             Complete Your Profile
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Welcome {userData.fullName}! Let's set up your profile.
+          <div className="mt-2 flex justify-between">
+            <div className={`w-1/2 h-1 ${step >= 1 ? 'bg-indigo-600' : 'bg-gray-200'}`}></div>
+            <div className={`w-1/2 h-1 ${step >= 2 ? 'bg-indigo-600' : 'bg-gray-200'}`}></div>
+          </div>
+          <p className="mt-4 text-center text-sm text-gray-600">
+            Step {step} of 2: {step === 1 ? 'Personal Information' : 'Preferences'}
           </p>
-        </div>
-        
-        <div className="relative">
-          <div className="flex items-center justify-between mb-4">
-            {[1, 2, 3].map((stepNumber) => (
-              <div 
-                key={stepNumber}
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  step >= stepNumber ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-600'
-                }`}
-              >
-                {stepNumber}
-              </div>
-            ))}
-          </div>
-          <div className="h-1 w-full bg-gray-200 absolute top-4 -z-10">
-            <div 
-              className="h-1 bg-indigo-600 transition-all duration-300" 
-              style={{ width: `${(step - 1) * 50}%` }}
-            ></div>
-          </div>
         </div>
         
         <form onSubmit={handleSubmit}>
           {step === 1 && (
             <div className="space-y-6">
-              <h3 className="text-xl font-medium text-gray-900">Tell us about yourself</h3>
-              
               <div>
                 <label htmlFor="bio" className="block text-sm font-medium text-gray-700">
                   Bio
@@ -157,9 +138,37 @@ const OnboardingPage: React.FC = () => {
                     value={formData.bio}
                     onChange={handleBioChange}
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    placeholder="Share a little about yourself..."
+                    placeholder="Tell us a bit about yourself..."
                   />
                 </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Interests
+                </label>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {availableInterests.map(interest => (
+                    <button
+                      key={interest}
+                      type="button"
+                      onClick={() => handleInterestToggle(interest)}
+                      className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                        formData.interests.includes(interest)
+                          ? 'bg-indigo-100 text-indigo-800'
+                          : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                      }`}
+                    >
+                      {interest}
+                      {formData.interests.includes(interest) && (
+                        <span className="ml-1.5 text-indigo-600">✓</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+                <p className="mt-1 text-sm text-gray-500">
+                  Select interests that you'd like to see content about
+                </p>
               </div>
               
               <div className="flex justify-end">
@@ -176,76 +185,48 @@ const OnboardingPage: React.FC = () => {
           
           {step === 2 && (
             <div className="space-y-6">
-              <h3 className="text-xl font-medium text-gray-900">Select your interests</h3>
-              
-              <div className="grid grid-cols-3 gap-3">
-                {availableInterests.map((interest) => (
-                  <div key={interest} className="relative">
-                    <button
-                      type="button"
-                      onClick={() => handleInterestToggle(interest)}
-                      className={`relative w-full py-2 px-3 border rounded-md text-sm ${
-                        formData.interests.includes(interest)
-                          ? 'bg-indigo-50 border-indigo-500 text-indigo-700'
-                          : 'border-gray-300 text-gray-700'
-                      }`}
-                    >
-                      {interest}
-                    </button>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Notification Preferences
+                </label>
+                <div className="mt-4 space-y-4">
+                  <div className="flex items-start">
+                    <div className="flex items-center h-5">
+                      <input
+                        id="email-notifications"
+                        name="email-notifications"
+                        type="checkbox"
+                        checked={formData.notificationPreferences.email}
+                        onChange={() => handleNotificationChange('email')}
+                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                      />
+                    </div>
+                    <div className="ml-3 text-sm">
+                      <label htmlFor="email-notifications" className="font-medium text-gray-700">
+                        Email Notifications
+                      </label>
+                      <p className="text-gray-500">Receive updates and alerts via email</p>
+                    </div>
                   </div>
-                ))}
-              </div>
-              
-              <div className="flex justify-between">
-                <button
-                  type="button"
-                  onClick={prevStep}
-                  className="inline-flex justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                  Back
-                </button>
-                <button
-                  type="button"
-                  onClick={nextStep}
-                  className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                  Next
-                </button>
-              </div>
-            </div>
-          )}
-          
-          {step === 3 && (
-            <div className="space-y-6">
-              <h3 className="text-xl font-medium text-gray-900">Notification preferences</h3>
-              
-              <div className="space-y-4">
-                <div className="flex items-center">
-                  <input
-                    id="email-notifications"
-                    name="email-notifications"
-                    type="checkbox"
-                    checked={formData.notificationPreferences.email}
-                    onChange={() => handleNotificationChange('email')}
-                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                  />
-                  <label htmlFor="email-notifications" className="ml-3 block text-sm font-medium text-gray-700">
-                    Email Notifications
-                  </label>
-                </div>
-                
-                <div className="flex items-center">
-                  <input
-                    id="push-notifications"
-                    name="push-notifications"
-                    type="checkbox"
-                    checked={formData.notificationPreferences.push}
-                    onChange={() => handleNotificationChange('push')}
-                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                  />
-                  <label htmlFor="push-notifications" className="ml-3 block text-sm font-medium text-gray-700">
-                    Push Notifications
-                  </label>
+                  
+                  <div className="flex items-start">
+                    <div className="flex items-center h-5">
+                      <input
+                        id="push-notifications"
+                        name="push-notifications"
+                        type="checkbox"
+                        checked={formData.notificationPreferences.push}
+                        onChange={() => handleNotificationChange('push')}
+                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                      />
+                    </div>
+                    <div className="ml-3 text-sm">
+                      <label htmlFor="push-notifications" className="ml-3 block text-sm font-medium text-gray-700">
+                        Push Notifications
+                      </label>
+                      <p className="text-gray-500">Receive real-time notifications in the app</p>
+                    </div>
+                  </div>
                 </div>
               </div>
               
