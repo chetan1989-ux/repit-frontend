@@ -24,7 +24,7 @@
     "vite": "^3.0.4"
   },
   "dependencies": {
-    "react-easy-crop": "^5.0.2",
+    "react-easy-crop": "^5.4.1",
     "react-router-dom": "^7.2.0",
     "uuid": "^9.0.1"
   }

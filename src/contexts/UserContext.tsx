@@ -54,6 +54,11 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
           username: userData.username,
           fullName: userData.fullName,
           email: userData.email,
+          bio: userData.bio,
+          mobileNumber: userData.mobileNumber,
+          gender: userData.gender,
+          profileImageUrl: userData.profileImageUrl,
+          interests: userData.interests,
           isAuthenticated: true,
         });
       } catch (error) {
